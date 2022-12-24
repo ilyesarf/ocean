@@ -1,14 +1,17 @@
+def collatz(n):
+    steps = [n]
+    while n != 1:
+        if n%2 == 0:
+            n //= 2
+        else:
+            n *= 3
+            n += 1
 
-n = int(input("n? "))
+        steps.append(n)
+    
+    return steps
 
-while n != 1:
-    if n%2 == 0:
-        n /= 2
-    else:
-        n *= 3
-        n += 1
+if __name__ == "__main__":
 
-    print(n)
-
-else:
-    print("n = 1")
+    n = int(input("n? "))
+    print(collatz(n))
