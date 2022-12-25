@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+
+from sys import argv
+
 def collatz(n):
     steps = [n]
     while n != 1:
@@ -12,6 +16,13 @@ def collatz(n):
     return steps
 
 if __name__ == "__main__":
+    
+    try:
+        n = int(argv[1])
+    except:
+        n = int(input('n? '))
 
-    n = int(input("n? "))
-    print(collatz(n))
+    steps = collatz(n)
+
+    print((n, len(steps)))
+    print(steps)
