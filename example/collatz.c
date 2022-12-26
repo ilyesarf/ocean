@@ -1,42 +1,54 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 
-int * collatz(int n){
-	//todo: use linked lists instead
-	int *steps;
-	steps = (int *)malloc(sizeof(int)*50);
-	
-	int id = 0;
-	steps[id] = n;
+typedef struct Node {
+    int data;
+    struct Node* next;
+} Node;
 
-	while(n != 1){
+Node* create_node(int data) {
+    Node* node = (Node*)malloc(sizeof(Node));
+    node->data = data;
+    node->next = NULL;
 
-		if ((n%2)==0){
-			n /= 2;
-		}else {
-			n = (n*3)+1;
-		}
-		
-		id++;
-		steps[id] = n;
-	}
-	
-	return steps;	
-} 
-
-int main(int argc, const char *argv[]){
-	int n;
-		
-	n = atoi(argv[1]);
-	
-	
-	int * steps = collatz(n);
-	
-	for (int i = 0; i <= 50-1; i++){
-		printf("%d ", steps[i]);
-	}
-	
-	printf("\n");
-
-	return 0;
+    return node;
 }
+
+void collatz(int n, Node** head) {
+    Node* node = create_node(n);
+    node->next = *head;
+    *head = node;    
+	Node* current = *head;
+
+	while (n != 1){
+		if (n%2 == 0){
+			n = n/2;
+		} else {
+			n = 3*n+1;
+		}
+
+		current->next = create_node(n);
+		current = current->next;
+	}
+}
+
+int main(int argc, char* argv[]) {
+    int n = 10;
+    if (argc > 1) {
+		n = atoi(argv[1]);    // Read n from the command line if provided
+    }
+
+    Node* head = NULL;
+    collatz(n, &head);
+    Node* current = head;
+
+    while (current != NULL) {
+		printf("%d ", current->data);
+		current = current->next;
+    }
+
+    printf("\n");
+    return 0;
+
+}	
