@@ -21,20 +21,21 @@ int * collatz(int n){
 		steps[id] = n;
 	}
 	
-	printf("%d\n", sizeof(steps));
 	return steps;	
 } 
 
 int main(int argc, const char *argv[]){
 	int n;
-	
+		
 	n = atoi(argv[1]);
+	
 	
 	int * steps = collatz(n);
 	
 	for (int i = 0; i <= 50-1; i++){
 		printf("%d ", steps[i]);
 	}
+	
 	printf("\n");
 
 	return 0;
