@@ -1,6 +1,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
+#include <netinet/in.h>
 
 typedef struct Node {
     int data;
@@ -34,10 +36,14 @@ void collatz(int n, Node** head) {
 }
 
 int main(int argc, char* argv[]) {
-    int n = 10;
+    clock_t start = clock();
+
+    int n;
     if (argc > 1) {
 		n = atoi(argv[1]);    // Read n from the command line if provided
-    }
+    } else {
+		n = 10;
+	}
 
     Node* head = NULL;
     collatz(n, &head);
@@ -48,7 +54,8 @@ int main(int argc, char* argv[]) {
 		current = current->next;
     }
 
-    printf("\n");
+	clock_t end = clock();
+    printf("\nExecution time: %f seconds\n", (double)(end - start)/CLOCKS_PER_SEC);
     return 0;
 
 }	

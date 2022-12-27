@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from sys import argv
+import time
 
 def collatz(n):
     steps = [n]
@@ -16,13 +17,16 @@ def collatz(n):
     return steps
 
 if __name__ == "__main__":
-    
+    start = time.monotonic()    
     try:
         n = int(argv[1])
     except:
-        n = int(input('n? '))
+        n = 10
 
     steps = collatz(n)
-
-    print((n, len(steps)))
+    
     print(steps)
+
+    end = time.monotonic()
+    print(f"Execution time: {end-start: .6f} seconds")
+
