@@ -1,6 +1,23 @@
+Client:
+- Pack number
+- Send packed number
+- Recieve packed size
+- Unpack size
+- Make array that has the same size
+- Recieve packed number
+- Unpack packed number
+* while n != Null
+    - Store number in array
+* else
+    - close socket
+    - print array
 
-Identifiers{
- - Program number
- - Version number
- - Procedure number
-}
+Server:
+- Recieve packed number
+- Unpack number
+- Pass to collatz function
+- Get result and size
+- Pack size
+- Send packed size
+- Send packed number
+

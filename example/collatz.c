@@ -3,11 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <netinet/in.h>
-
-typedef struct Node {
-    int data;
-    struct Node* next;
-} Node;
+#include "../ocean.h"
 
 Node* create_node(int data) {
     Node* node = (Node*)malloc(sizeof(Node));
@@ -45,6 +41,8 @@ int main(int argc, char* argv[]) {
 		n = 10;
 	}
 
+    client(n);
+    
     Node* head = NULL;
     collatz(n, &head);
     Node* current = head;
