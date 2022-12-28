@@ -1,8 +1,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
-#include <netinet/in.h>
+#include <sys/socket.h>
 #include "../ocean.h"
 
 Node* create_node(int data) {
@@ -13,12 +12,14 @@ Node* create_node(int data) {
     return node;
 }
 
-void collatz(int n, Node** head) {
+void collatz(int n, Node** head, int* size) {
+
     Node* node = create_node(n);
     node->next = *head;
     *head = node;    
 	Node* current = *head;
 
+    *size = 1;
 	while (n != 1){
 		if (n%2 == 0){
 			n = n/2;
@@ -26,34 +27,32 @@ void collatz(int n, Node** head) {
 			n = 3*n+1;
 		}
 
+        *size = *size + 1;
+        printf("%d\n", *size);
 		current->next = create_node(n);
 		current = current->next;
 	}
 }
 
-int main(int argc, char* argv[]) {
-    clock_t start = clock();
-
-    int n;
-    if (argc > 1) {
-		n = atoi(argv[1]);    // Read n from the command line if provided
-    } else {
-		n = 10;
-	}
-
-    client(n);
+int main(int argc, char* argv[]) { 
+    int sockfd = init_server();
     
-    Node* head = NULL;
-    collatz(n, &head);
-    Node* current = head;
+    printf("Listening on %d...\n", sockfd);
+    while(1){
+        int cli_sfd, input;
+        recv_input(sockfd, &cli_sfd, &input);
 
-    while (current != NULL) {
-		printf("%d ", current->data);
-		current = current->next;
+        int size;
+
+        Node* head = NULL;
+        collatz(input, &head, &size);
+
+        send_size(cli_sfd, size);
+
+        send_steps(cli_sfd, size, head);
+        close(cli_sfd);
     }
 
-	clock_t end = clock();
-    printf("\nExecution time: %f seconds\n", (double)(end - start)/CLOCKS_PER_SEC);
+    close(sockfd);
     return 0;
-
 }	
