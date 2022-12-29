@@ -28,7 +28,7 @@ void collatz(int n, Node** head, int* size) {
 		}
 
         *size = *size + 1;
-        printf("%d\n", *size);
+        printf("%d ", n);
 		current->next = create_node(n);
 		current = current->next;
 	}

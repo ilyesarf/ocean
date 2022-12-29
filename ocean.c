@@ -1,8 +1,10 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <stdio.h>
+#include <unistd.h>
 #include "ocean.h"
 
+//helpers
 int pack(int data){
     return htons(data);
 }
@@ -11,7 +13,8 @@ int unpack(int packed_data){
     return ntohs(packed_data);
 }
 
-int client(int input){
+//client side
+int init_client(){
     int sockfd;
     struct sockaddr_in cli;
 
@@ -29,19 +32,44 @@ int client(int input){
         close(sockfd);
         perror("Can't connect to server");
         return -2;
-    }
+    } 
 
-    int packed_input = pack(input);
-    if (send(sockfd, &packed_input, sizeof packed_input, 0) < 0){
-        perror("Can't send data to server");
-        return -3;
-    }
-
-    close(sockfd);
-    return 0;
+    return sockfd;
 }
 
-int server(){
+void send_input(int sockfd, int input){
+    int packed_input = pack(input);
+
+    if (send(sockfd, &packed_input, sizeof packed_input, 0) < 0){
+        perror("Can't send data to server");
+    }
+}
+
+int recv_size(int sockfd){
+    int packed_size;
+    if (recv(sockfd, &packed_size, sizeof packed_size, 0) < 0){
+        perror("Can't recieve size");
+        return -1;
+    }
+
+    int size = unpack(packed_size);
+
+    return size;
+}
+
+void recv_steps(int sockfd, int size, int steps[]){
+    for (int i = 0; i <= size; i++){
+        int packed_number;
+        if (recv(sockfd, &packed_number, sizeof packed_number, 0) < 0){
+            perror("Can't recieve number");
+        }
+
+        steps[i] = unpack(packed_number);        
+    }
+}
+
+//server side
+int init_server(){
     int sockfd;
     struct sockaddr_in srv;
 
@@ -64,29 +92,50 @@ int server(){
         perror("Can't listen !!");
         return -3;
     }
+ 
+    return sockfd;
+}
 
+void recv_input(int sockfd, int* cli_sfd, int* input){
     struct sockaddr cli_addr;
     socklen_t sin_size;
-    int cli_sfd;
     
-    while (1){
-        sin_size = sizeof cli_addr;
-        cli_sfd = accept(sockfd, (struct sockaddr *)&cli_addr, &sin_size);
-        if (cli_sfd == -1){
-            perror("Can't accept connection");
-            return -4;
-        }
+    sin_size = sizeof cli_addr;
 
-        int input;
-        if (recv(cli_sfd, &input, sizeof input, 0) < 0){
-            perror("Can't recieve data");
-            return -5;
-        }
-
-        input = unpack(input);
-        printf("Client sent %d\n", input);
+    *cli_sfd = accept(sockfd, (struct sockaddr *)&cli_addr, &sin_size);
+    if (*cli_sfd == -1){
+        perror("Can't accept connection");
     }
 
-    close(sockfd);
-    return 0;
+    int packed_input;
+    if (recv(*cli_sfd, &packed_input, sizeof packed_input, 0) < 0){
+        perror("Can't recieve data");
+    }
+
+    *input = unpack(packed_input);
+}    
+
+void send_size(int cli_sfd, int size){
+    int packed_size = pack(size);
+
+    if (write(cli_sfd, &packed_size, sizeof packed_size) < 0){
+        perror("Can't send size to client");
+    }
+
+}
+
+void send_steps(int cli_sfd, int size, Node* head){
+    Node* current = head;
+
+    for (int i = 0; i < size; i++){
+        //printf("%d ", current->data);
+        if (current != NULL){
+            int packed_number = pack(current->data);
+            if (write(cli_sfd, &packed_number, sizeof packed_number) < 0){
+                perror("Can't send step");
+            }
+            
+            current = current->next;
+        }
+    }
 }
