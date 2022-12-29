@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from sys import argv
+from ctypes import *
 import time
 
 def collatz(n):
@@ -18,6 +19,8 @@ def collatz(n):
 
 if __name__ == "__main__":
     start = time.monotonic()    
+    #ocean = CDLL('../ocean.so')
+
     try:
         n = int(argv[1])
     except:

@@ -58,7 +58,7 @@ int recv_size(int sockfd){
 }
 
 void recv_steps(int sockfd, int size, int steps[]){
-    for (int i = 0; i <= size; i++){
+    for (int i = 0; i < size; i++){
         int packed_number;
         if (recv(sockfd, &packed_number, sizeof packed_number, 0) < 0){
             perror("Can't recieve number");

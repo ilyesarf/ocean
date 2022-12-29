@@ -1,9 +1,11 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 #include "ocean.h"
 
 
 int main(int argc, char *argv[]){
+    clock_t start = clock();
 
     int sockfd;
     sockfd = init_client();
@@ -21,12 +23,15 @@ int main(int argc, char *argv[]){
 
     int steps[size];
     recv_steps(sockfd, size, steps);
-    printf("%lu\n", sizeof(steps));    
+    
     close(sockfd);
 
     for (int i = 0; i < size; i++){
         printf("%d ", steps[i]);
     }
+
+    clock_t end = clock();
     
+    printf("\nExecution time: %f seconds\n", (double)(end - start)/CLOCKS_PER_SEC);
     return 0;
 }
