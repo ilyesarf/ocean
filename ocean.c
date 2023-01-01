@@ -19,9 +19,9 @@ int init_client(){
     struct sockaddr_in cli;
 
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    if (sockfd == -1){
+    if (sockfd < 0){
         perror("Socket not created");
-        return -1;
+        exit(-1);
     }
 
     cli.sin_addr.s_addr = inet_addr("127.0.0.1");
@@ -31,7 +31,7 @@ int init_client(){
     if (connect(sockfd, (struct sockaddr *)&cli, sizeof(cli)) < 0){
         close(sockfd);
         perror("Can't connect to server");
-        return -2;
+        exit(-2);
     } 
 
     return sockfd;
@@ -74,9 +74,9 @@ int init_server(){
     struct sockaddr_in srv;
 
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    if (sockfd == -1){
+    if (sockfd < 0){
         perror("Socket not created");
-        return -1;
+        exit(-1);
     }
 
     srv.sin_addr.s_addr = INADDR_ANY;
@@ -85,12 +85,12 @@ int init_server(){
 
     if (bind(sockfd, (struct sockaddr *)&srv, sizeof(srv)) < 0){
         perror("Can't open port");
-        return -2;
+        exit(-2);
     }
 
     if (listen(sockfd, 2) < 0){
         perror("Can't listen !!");
-        return -3;
+        exit(-3);
     }
  
     return sockfd;
