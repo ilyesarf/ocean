@@ -6,11 +6,11 @@
 
 //helpers
 int pack(int data){
-    return htons(data);
+    return htonl(data);
 }
 
 int unpack(int packed_data){
-    return ntohs(packed_data);
+    return ntohl(packed_data);
 }
 
 //client side
