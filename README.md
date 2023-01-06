@@ -1,5 +1,15 @@
-## One liner demo
+## Demo
+
+** Server side **
+```
+$ clang example/collatz.c ocean/ocean.c -o collatz && ./collatz
 
 ```
-$ chmod +x demo.sh && ./demo.sh
+
+** Client Side **
+
+```
+
+$ clang example/client.c ocean/ocean.c -o client && ./client
+
 ```
