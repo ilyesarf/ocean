@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
-#include "ocean.h"
+#include "../ocean/ocean.h"
 
 
 int main(int argc, char *argv[]){

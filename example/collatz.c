@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/socket.h>
-#include "../ocean.h"
+#include "../ocean/ocean.h"
 
 Node* create_node(int data) {
     Node* node = (Node*)malloc(sizeof(Node));
