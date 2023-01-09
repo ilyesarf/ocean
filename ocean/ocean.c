@@ -124,18 +124,10 @@ void send_size(int cli_sfd, int size){
 
 }
 
-void send_steps(int cli_sfd, int size, Node* head){
-    Node* current = head;
-
-    for (int i = 0; i < size; i++){
-        //printf("%d ", current->data);
-        if (current != NULL){
-            int packed_number = pack(current->data);
-            if (write(cli_sfd, &packed_number, sizeof packed_number) < 0){
-                perror("Can't send step");
-            }
-            
-            current = current->next;
-        }
+void send_steps(int cli_sfd, int number){
+    int packed_number = pack(number);
+    if (write(cli_sfd, &packed_number, sizeof packed_number) < 0){
+        perror("Can't send step");
     }
+ 
 }

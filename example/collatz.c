@@ -40,15 +40,25 @@ int main(int argc, char* argv[]) {
     while(1){
         int cli_sfd, input;
         recv_input(sockfd, &cli_sfd, &input);
-
+	
         int size;
 
         Node* head = NULL;
         collatz(input, &head, &size);
 
-        send_size(cli_sfd, size);
 
-        send_steps(cli_sfd, size, head);
+        send_size(cli_sfd, size);
+		
+	Node* current = head;
+
+	for (int i = 0; i < size; i++) {	
+		if (current != NULL){	
+			send_steps(cli_sfd, current->data);
+		}
+
+		current = current->next;
+	}
+
         close(cli_sfd);
     }
 

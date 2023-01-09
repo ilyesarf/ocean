@@ -17,5 +17,5 @@ extern void send_size(int cli_sfd, int size);
 
 extern void recv_steps(int sockfd, int size, int steps[]);
 
-extern void send_steps(int cli_sfd, int size, Node* head);
+extern void send_steps(int cli_sfd, int number);
 
