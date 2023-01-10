@@ -26,10 +26,10 @@ if __name__ == "__main__":
     print(f"Listening on {sockfd}")
 
     while True:
-        cli_sfd = input = c_int()
+        cli_sfd = c_int()
+        input = c_int()
         ocean.recv_input(sockfd, byref(cli_sfd), byref(input))
 
-        print(input.value)
         steps = collatz(input.value)
         size = len(steps)
 
