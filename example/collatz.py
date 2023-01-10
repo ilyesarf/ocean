@@ -3,6 +3,7 @@
 from sys import argv
 from ctypes import *
 import time
+import socket
 
 def collatz(n):
     steps = [n]
@@ -19,17 +20,26 @@ def collatz(n):
 
 if __name__ == "__main__":
     start = time.monotonic()    
-    #ocean = CDLL('../ocean.so')
+    ocean = CDLL('../ocean.so')
 
-    try:
-        n = int(argv[1])
-    except:
-        n = 10
+    sockfd = ocean.init_server()
+    print(f"Listening on {sockfd}")
 
-    steps = collatz(n)
-    
-    print(steps)
+    while True:
+        cli_sfd = input = c_int()
+        ocean.recv_input(sockfd, byref(cli_sfd), byref(input))
 
-    end = time.monotonic()
-    print(f"Execution time: {end-start: .6f} seconds")
+        print(input.value)
+        steps = collatz(input.value)
+        size = len(steps)
+
+        ocean.send_size(cli_sfd, size)
+
+        for step in steps:
+            ocean.send_steps(cli_sfd, step)
+        
+        
+        socket.close(cli_sfd.value)
+
+    socket.close(sockfd)
 
